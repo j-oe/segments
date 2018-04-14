@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+	<!-- 
+		fastclass Webapp - v0.2.1
+		(c) 2018 Jan Oevermann
+		jan.oevermann@hs-karlsruhe.de
+		License: MIT
+
+		More information: http://janoevermann.de
+	-->
+	<head>
+		<meta charset="utf-8">
+		<meta name="author" content="Jan Oevermann">
+		<meta name="description" content="fastclass Studio">
+		<link rel="stylesheet" type="text/css" href="style/fc.css">
+		<title>fastclass - Studio</title>
+	</head>
+	<body>
+		<div id="studio">
+			<div class="container grid-lg">
+				<header class="navbar">
+					<section class="navbar-section">
+					<div id="logo"><i>fast</i><b>class</b></div>
+						<div class="dropdown">
+							<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+								Modell <i class="icon icon-caret"></i>
+							</a>
+							<ul class="menu">
+								<li class="menu-item">
+									<a class="no-link" id="new_model" href="#">Neu</a>
+								</li>
+								<li class="menu-item">
+									<a class="no-link" id="load_model" href="#">Laden</a>
+								</li>
+								<div class="divider"></div>
+								<li class="menu-item">
+									<a href="#quality">Kennzahlen</a>
+								</li>
+								<div class="divider"></div>
+								<li class="menu-item">
+									<a href="#training">Aktuelles Modell</a>
+								</li>
+							</ul>
+						</div>
+
+						<div class="dropdown">
+							<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+								Ähnlichkeitsanalyse <i class="icon icon-caret"></i>
+							</a>
+							<ul class="menu">
+								<li class="menu-item">
+									<a class="no-link" id="new_report" href="#">Neu</a>
+								</li>
+								<li class="menu-item">
+									<a class="no-link" id="load_report" href="#">Laden</a>
+								</li>
+								<div class="divider"></div>
+								<li class="menu-item">
+									<a href="#report">Aktuelle Analyse</a>
+								</li>
+							</ul>
+						</div>
+						
+						<div class="dropdown">
+							<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+								Klassifizieren <i class="icon icon-caret"></i>
+							</a>
+							<ul class="menu">
+								<li class="menu-item">
+									<a href="#authoring">Text</a>
+								</li>
+								<li class="menu-item">
+									<a href="#classify">Datei</a>
+								</li>
+								<div class="divider"></div>
+								<li class="menu-item">
+									<a href="#classify">Aktuelle Klassifikation</a>
+								</li>
+							</ul>
+						</div>
+
+						<!-- <div class="dropdown float-right">
+							<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+								Language <i class="icon icon-caret"></i>
+							</a>
+							<ul class="menu">
+								<li class="menu-item disabled">
+									<a href="#">Deutsch</a>
+								</li>
+								<li class="menu-item">
+									<a href="index.en.html">English</a>
+								</li>
+							</ul>
+						</div> -->
+					</section>
+					<section class="navbar-section">
+						<div class="dropdown float-right">
+							<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+								Einstellungen <i class="icon icon-caret"></i>
+							</a>
+							<ul class="menu">
+								<li class="menu-item">
+									<a class="no-link" id="change_set" href="#">Bearbeiten</a>
+								</li>
+								<li class="menu-item">
+									<a class="no-link" id="reset_set" href="#">Zurücksetzen</a>
+								</li>
+								<li class="menu-item">
+									<a class="no-link" id="export_set" href="#">Exportieren</a>
+								</li>
+								<!-- <div class="divider"></div>
+								<li class="menu-item">
+									<a class="no-link" id="edit_license" href="#">Lizenz</a>
+								</li> -->
+								<div class="divider"></div>
+								<li class="menu-item">
+									<a class="no-link" id="clear_data" href="#">Alle Daten löschen</a>
+								</li>
+								<li class="menu-item">
+									<a class="no-link" id="debug_data" href="#">Konsolen-Ausgabe</a>
+								</li>
+							</ul>
+						</div>
+						<div class="dropdown float-right">
+							<a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
+								Mehr <i class="icon icon-caret"></i>
+							</a>
+							<ul class="menu">
+								<!-- <li class="menu-item">
+									<a href="http://www.fastclass.de">Website</a>
+								</li> -->
+								<li class="menu-item">
+									<a href="http://www.janoevermann.de">Über <i>fast</i><b>class</b></a>
+								</li>
+							</ul>
+						</div>
+					</section>
+				</header>
+
+				<div class="modal" id="modal">
+					<div class="modal-overlay"></div>
+					<div class="modal-container">
+						<div class="modal-header">
+							<button id="modal-x" class="btn btn-clear float-right"></button>
+							<div class="modal-title" id="modal-title"></div>
+						</div>
+						<div class="modal-body">
+							<div class="content" id="modal-content"></div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" id="modal-ok">OK</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal" id="new-modal">
+					<div class="modal-overlay" id="new-modal-overlay"></div>
+					<div class="modal-container">
+						<div class="modal-header">
+							<button id="new-modal-x" class="btn btn-clear float-right"></button>
+							<div class="modal-title">Neues Modell</div>
+						</div>
+						<div class="modal-body">
+							<div class="content">Wenn Sie ein neues Modell anlegen, werden nicht gespeicherte Daten verworfen. Fortfahren?</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn" id="new-modal-cancel">Abbrechen</button>
+							<button class="btn btn-primary" id="new-modal-continue">Fortfahren</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal" id="diff-modal">
+					<div class="modal-overlay" id="diff-modal-overlay"></div>
+					<div class="modal-container">
+						<div class="modal-header">
+							<button id="diff-modal-x" class="btn btn-clear float-right"></button>
+							<h5 class="modal-title">Vergleichsansicht</h5>
+							<div id="diff-details">
+								<p>
+									<span>Module: 
+										<small>
+											<span class="text text-bold" id="diff-details-a"></span>
+											<i class="icon icon-resize-horiz"></i>
+											<span class="text-primary text-bold" id="diff-details-b"></span>
+										</small>
+									</span>
+									
+								</p>
+								<p>
+									<span>Titel: 
+										<span class="text text-bold" id="diff-details-t"></span>
+										<span class="text text-bold text-primary" id="diff-details-ta"></span>
+									</span>
+									
+								</p>
+								<p>
+									<span>Ähnlichkeit: <code id="diff-details-v"></code></span>
+									<span  class="diff-details-right">Unterschiede: 
+										<small id="diff-details-p" class="text-success text-bold"></small>
+										<small id="diff-details-m" class="text-error text-bold"></small>
+									</span>
+								</p>
+								<p id="diff-details-weighted" style="display:none">
+									Gewichtet:<span id="diff-details-weighted-content" ></span>
+								</p>
+							</div>
+						</div>
+						<div class="modal-body">
+							<div class="content" id="diff-body"></div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn" id="diff-modal-cancel">Schließen</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal" id="load-modal">
+					<div class="modal-overlay" id="load-modal-overlay"></div>
+					<div class="modal-container">
+						<div class="modal-header">
+							<div class="content" id="modal-content">
+								<button id="load-modal-x" class="btn btn-clear float-right"></button>
+								<ul class="tab tab-block">
+									<li class="tab-item">
+										<a href="#" id="from-browser">Browser</a>
+									</li>
+									<li class="tab-item">
+										<a href="#" id="from-filesystem">Datei</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="modal-body">
+							<div>Wählen Sie ein Modell aus:</div>
+							<div class="columns" class="tab-panel" id="load-from-browser">
+								<div class="column col-8">
+									<small id="no-local-models">Keine Modelle im Browser gespeichert</small>
+									<select style="display:none;" placeholder="Im Browser gespeicherte Modelle" id="localModel"></select>
+								</div>
+								<div class="column col-4">
+									<button class="btn" id="load_localModel">Modell laden</button>
+								</div>
+							</div>
+							<div class="columns" class="tab-panel" id="load-from-filesystem" style="display:none">
+								<div class="column col-8">
+									<input type="file" name="input" id="fileModel" accept=".fcm,.fcr">
+								</div>
+								<div class="column col-4">
+									<button class="btn" id="load_fileModel">Datei laden</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal" id="set-modal">
+					<div class="modal-overlay" id="set-modal-overlay"></div>
+					<div class="modal-container">
+						<div class="modal-header">
+							<div class="content">
+								<button id="set-modal-x" class="btn btn-clear float-right"></button>
+								<h4>Einstellungen</h4>
+							</div>
+						</div>
+						<div class="modal-body">
+							<table class="table table-hover">
+								<colgroup>
+									<col style="width:40%">
+									<col style="width:60%">
+								</colgroup>
+								<tbody id="settings">
+								</tbody>
+							</table>
+							<small>Einstellungen werden automatisch gespeichert.</small>
+						</div>
+					</div>
+				</div>
+
+				<section id="panel_start">
+					
+					<div class="empty" style="margin-top:50px;">
+						<p class="h4 empty-title">Holen Sie <strong>mehr</strong> aus Ihrem Content!</p>
+						<p class="empty-meta">Intelligente Klassifizierung und Ähnlichkeitsanalysen</p>
+
+						<ul class="step">
+						  <li class="step-item">
+						    <a href="#training" class="tooltip" data-tooltip="Trainieren">Trainieren</a>
+						  </li>
+						  <li class="step-item active">
+						    <a href="#report" class="tooltip" data-tooltip="Analysieren">Analysieren</a>
+						  </li>
+						  <li class="step-item">
+						    <a href="#classify" class="tooltip" data-tooltip="Klassifizieren">Klassifizieren</a>
+						  </li>
+						</ul>
+
+						<a class="empty-action btn" id="demo">Demo laden</a>
+					</div>
+
+					<div class="toast" style="margin-top:20px;">
+						Developer Preview <kbd class="float-right">Build: HsKA2018-1</kbd>
+					</div>
+
+				</section>
+
+				<section id="panel_training" style="display:none;">
+
+					<h3 class="panelTitle" id="panelTitle">Training</h3>
+					
+					<div id="manageModel" style="display:none;"> 
+						<div class="columns">
+							<div class="column col-8 float-right" id="model-name" contenteditable>Unbenanntes Modell </div> 
+							<div class="column col-2">
+								<div class="dropdown">
+									<a href="#" class="btn dropdown-toggle" tabindex="0">
+										Modell sichern <i class="icon icon-caret"></i>
+									</a>
+									<ul class="menu">
+										<li class="menu-item">
+											<a href="#" class="no-link" id="save_fcm">Herunterladen</a>
+										</li>
+										<li class="menu-item">
+											<a href="#" class="no-link" id="save_locally">In Browser speichern</a>
+										</li>
+										<div class="divider"></div>
+										<li class="menu-item ">
+											<a href="#" class="no-link" id="save_source">Quelldaten sichern</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="column col-2">
+								<button class="btn float-right" id="add_data">Daten hinzufügen</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="columns" id="importFile">
+						<div class="column col-12">
+							<div class="card">
+								<div class="card-body">             
+									<input type="file" name="input" id="userinput">
+
+									<span id="import" class="loading" style="display:none;"></span>
+
+									<button class="btn float-right" id="import_json" style="display:none;">JSON importieren</button>
+									<button class="btn float-right" id="import_xml" style="display:none;">XML importieren</button>
+									<button class="btn float-right" id="load_fcm" style="display:none;">Modell laden</button>
+									<small style="clear:both" id="disclaimer"><br>Es werden keine Daten versendet oder gespeichert. Alle Berechnungen erfolgen lokal in Ihrem Browser.</small>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="xmlAnalysis" style="display:none;">
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">XML-Optionen</h4>
+										<h6 class="card-meta">Bitte geben Sie an, welche XML-Elemente als Module verwendet werden sollen und in welchem Attribut die auszuwertende Klasse steht.</h6>
+									</div>
+									<div class="card-body">             
+										<div class="form-group">
+											<select style="display:none;" placeholder="Modul-Element(e)" id="xmlElem" multiple></select>
+											<select style="display:none;" placeholder="Klassen-Attribut" id="xmlAttr"></select>
+										</div>
+										<div class="form-group">
+											<br/>
+											<label class="form-switch">
+												<input type="checkbox" id="showSignalSelection"/>
+												<i class="form-icon"></i> Semantische Gewichtung
+											</label>
+										</div>
+										<div class="form-group" id="signalSelection" style="display:none;">
+											<select id="xmlElemSignal" placeholder="Gewichtete Elemente" multiple></select>
+											<br/>
+											<label for="signalWeight">Gewichtungswert: <code id="signalWeightValue">2.5x</code>
+												<input id="signalWeight" class="slider" type="range" min="0" max="100" step="0.5" value="2.5" />
+											</label>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="trainingAnalysis" style="display:none;">
+						<div class="columns">
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Module</h4>
+										<h6 class="card-meta">Analysierte Module</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="tA_cnt">?</h2>
+									</div>
+								</div>
+							</div>
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Klassen</h4>
+										<h6 class="card-meta">Verwendete Klassen</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="tA_cls">?</h2>
+									</div>
+								</div>
+							</div>
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Größe</h4>
+										<h6 class="card-meta">Wortanzahl pro Modul</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="tA_avg">?</h2>
+									</div>
+								</div>
+							</div>
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Zeit</h4>
+										<h6 class="card-meta">Zeit für das Training</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="tA_tme">?</h2>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Klassenverteilung</h4>
+										<h6 class="card-meta">Anzahl analysierter Module pro Klasse (Mouseover für mehr Informationen zu einer Klasse).</h6>
+									</div>
+									<div class="card-body">
+										<div id="tA_plot" style="height:800px;width:900px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section id="panel_report" style="display:none;">
+
+					<h3 class="panelTitle" id="panelTitle_rp">Ähnlichkeitsanalyse</h3>
+
+					<div id="manageReport" style="display:none;"> 
+						<div class="columns">
+							<div class="column col-8 float-right" id="report-name" contenteditable>Unbenannte Analyse </div> 
+							<div class="column col-2">
+								<div class="dropdown">
+									<a href="#" class="btn dropdown-toggle float-right" tabindex="0">
+										Ergebnisse sichern <i class="icon icon-caret"></i>
+									</a>
+									<ul class="menu">
+										<div class="divider" data-content="Ergebnisse"></div>
+										<li class="menu-item">
+											<a href="#" class="no-link" id="export_simRepCSV">CSV</a>
+										</li>
+										<li class="menu-item">
+											<a href="#" class="no-link" id="export_simRep">JSON</a>
+										</li>
+										<div class="divider" data-content="Report"></div>
+										<li class="menu-item">
+											<a href="#" class="no-link" id="save_report_locally">In Browser speichern</a>
+										</li>
+										<li class="menu-item">
+											<a href="#" class="no-link" id="export_sim_report">Report exportieren</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="column col-2">
+								<button class="btn float-right" onclick="location.reload()">Neue Analyse</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="columns" id="importFile_rp">
+						<div class="column col-12">
+							<div class="card">
+								<div class="card-body">             
+									<input type="file" name="input" id="userinput_rp">
+
+									<span id="import_rp" class="loading" style="display:none;"></span>
+
+									<button class="btn float-right" id="import_xml_rp" style="display:none;">XML analysieren</button>
+									<button class="btn float-right" id="import_json_rp" style="display:none;">JSON analysieren</button>
+									<button class="btn float-right" id="import_pdf_rp" style="display:none;">PDFs analysieren</button>
+									<small style="clear:both" id="disclaimer_rp"><br>Es werden keine Daten versendet oder gespeichert. Alle Berechnungen erfolgen lokal in Ihrem Browser.</small>
+									<small style="display:none;clear:both" id="threshold_autoadjust"><br>Der Grenzwert für Ähnlichkeitswerte wurde automatisch auf 0 gesetzt. Der Wert kann in den Einstellungen manuell angepasst werden.</small>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="xmlAnalysis_rp" style="display:none;">
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">XML-Optionen</h4>
+										<h6 class="card-meta">Bitte geben Sie an, welche XML-Elemente als Module verwendet werden sollen und in welchem Attribut die auszuwertende ID steht.</h6>
+									</div>
+									<div class="card-body">             
+										<div class="form-group">
+											<select style="display:none;" placeholder="Modul-Element(e)" id="xmlElem_rp" multiple></select>
+											<select style="display:none;" placeholder="ID-Attribut" id="xmlAttr_rp"></select>
+										</div>
+										<div class="form-group">
+											<br/>
+											<label class="form-switch">
+												<input type="checkbox" id="showSignalSelection_rp"/>
+												<i class="form-icon"></i> Semantische Gewichtung
+											</label>
+										</div>
+										<div class="form-group" id="signalSelection_rp" style="display:none;">
+											<select id="xmlElemSignal_rp" placeholder="Gewichtete Elemente" multiple></select>
+											<!-- <br/>
+											<label for="signalWeight_rp">Gewichtungswert: <code id="signalWeightValue_rp">2.5x</code>
+												<input id="signalWeight_rp" class="slider" type="range" min="0" max="100" step="0.5" value="2.5" />
+											</label> -->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- <div id="reportSettings">
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Optionen für Ähnlichkeitsanalyse</h4>
+										<h6 class="card-meta"></h6>
+									</div>
+									<div class="card-body">             
+										<div class="form-group">
+											<label for="similarityThreshold">Grenzwert für Ähnlichkeit <code id="similarityThresholdValue">90%</code>
+												<input id="similarityThreshold" class="slider" type="range" min="0" max="1" value="0.9" step="0.01" />
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> -->
+
+					<div id="reportAnalysis" style="display:none;">
+						<div class="columns">
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Duplikate</h4>
+										<h6 class="card-meta">Ähnlichkeitsbeziehungen</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="rA_idf">?</h2>
+										<p>bei <span id="rA_com"></span> Kombinationen</p>
+									</div>
+								</div>
+							</div>
+							<div class="column col-6">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Ähnlichkeiten</h4>
+									</div>
+									<div class="card-body" style="padding: 0 27px;" id="rA_histogramChart"></div>
+								</div>
+							</div>
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Zeit</h4>
+										<h6 class="card-meta">Benötigte Zeit</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="rA_tme">?</h2>
+										<p>für <span id="rA_cnt"></span> analysierte Objekte</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Objektähnlichkeiten</h4>
+										<h6 class="card-meta">Cluster von ähnlichen oder duplikaten Objekten.</h6>
+									</div>
+									<div class="card-body">
+										<svg id="rA_graph" style="width:900px;height:600px;"></svg>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Detailansicht Ähnlichkeitswerte</h4>
+										<h6 class="card-meta">Tabellarische Übersicht der Ähnlichkeiten</h6>
+									</div>
+									<div class="card-body">
+										<div id="rA_table" style="width:900px;">
+											<div></div>
+											<table class="table table-striped table-hover">
+												<thead>
+													<tr> <th>#</th> <th>Modul-ID</th> <th>Modul-ID</th> <th>Ähnlichkeit</th> <th>Aktion</th> <!-- <th>✓</th> --> </tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+				
+				</section>
+
+				<section id="panel_quality" style="display:none;">
+
+					<h3 class="panelTitle" id="panelTitle_qs">Modell-Kennzahlen</h3>
+
+					<div id="panel_quality_warning" class="toast toast-primary" style="margin-top:20px;">
+						<span style="font-size:20px;display:inline-block;margin-right:10px;">&#9888;</span>
+						Um diese Funktion nutzen zu können, muss zuerst ein Modell trainiert werden. Starten Sie <a href="#training">hier</a>.
+					</div>
+
+					<div class="columns" id="qsOptions" style="display:none;">
+						<div class="column col-12">
+							<div class="card">
+								<div class="card-body">
+									<label class="form-switch">
+										<input type="checkbox" id="tA_svl_mode" checked/>
+										<i class="form-icon"></i> Qualität
+									</label>
+									<label class="form-switch">
+										<input type="checkbox" id="tA_cvl_mode" checked/>
+										<i class="form-icon"></i> Forecast
+									</label>
+									<button class="btn float-right" id="qs" href="#">Berechnen</button>
+									<small style="clear:both"><br>Die Berechnung der Kennzahlen kann unter Umständen sehr lange dauern.<br>
+									Sie können die Anwendung während der Berechnung weiter verwenden.</small>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="columns" id="qsAnalysis" style="display:none;">
+						<div class="column col-6" id="tA_svl_panel" style="display:none;">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Qualität Trainingsdaten</h4>
+									<h6 class="card-meta">Kennzahl zur Ermittlung der Klassifikationsqualität der Trainingsdaten. Anteil korrekter Klassifikationen bei Selbstvalidierung.</h6>
+								</div>
+								<div class="card-body text-center">
+									<h2 id="tA_svl"><div class="loading"></div></h2>
+									<div id="tA_svl_g" style="height:350px;"></div>
+								</div>
+							</div>
+						</div>
+						<div class="column col-6" id="tA_cvl_panel" style="display:none;">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Forecast Korrektheit</h4>
+									<h6 class="card-meta">Zu erwartende Korrektheit bei automatisierter Klassifizierung (±3%). Anteil korrekter Klassifizierungen bei 5-facher Kreuzvalidierung.</h6>
+								</div>
+								<div class="card-body text-center">
+									<h2 id="tA_cvl"><div class="loading"></div></h2>
+									<div id="tA_cvl_g" style="height:350px;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="columns" id="downloadQSreport" style="display:none;">
+						<div class="column col-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Report: Problematische Module</h4>
+									<h6 class="card-meta">Dieser Report enthält alle Module, für die die Selbstvalidierung fehlgeschlagen ist.<br/>
+									 Sie können als Grundlage für eine weitere Analyse dienen.</h6>
+								</div>
+								<div class="card-body">             
+									<div class="form-group">
+										<button class="btn" id="export_report">Report herunterladen</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section id="panel_classify" style="display:none;">
+					
+					<h3 class="panelTitle" id="panelTitle_cl">Klassifikation</h3>
+
+
+					<div id="panel_classify_warning" class="toast toast-primary" style="margin-top:20px;">
+						<span style="font-size:20px;display:inline-block;margin-right:10px;">&#9888;</span>
+						Um diese Funktion nutzen zu können, muss zuerst ein Modell trainiert werden. Starten Sie <a href="#training">hier</a>.
+					</div>
+
+					<div id="manageClassification" style="display:none;"> 
+						<div class="columns">
+							<div class="column col-8">
+								<div class="tile tile-centered">
+									<div class="tile-content">
+										<div class="tile-title" id="classifiedFile">unknown file</div>
+										<div class="tile-meta">klassifiziert mit Modell: <a href="#training" id="clModelName"></a></div>
+									</div>
+								</div>
+							</div> 
+							<div class="column col-2">
+								<div class="dropdown">
+									<a href="#" class="btn dropdown-toggle float-right" tabindex="0">
+										Ergebnisse sichern <i class="icon icon-caret"></i>
+									</a>
+									<ul class="menu">
+										<li class="menu-item">
+											<a href="#" class="no-link" id="export_wa">WebAnnotations</a>
+										</li>
+										<div class="divider"></div>
+										<li class="menu-item">
+											<a href="#" class="no-link" id="export_results">Rohdaten sichern</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="column col-2">
+								<button class="btn float-right" id="add_data">Neue Klassifikation</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="columns" id="classificationData" style="display: none;">
+						<div class="column col-12">
+							<div class="card">
+								<div class="card-body">             
+									<input type="file" name="input" id="userinput_cl"><div id="classify" style="display:none;" class="loading"></div>
+									
+									<div id="status_cl_bar" class="bar" style="display:none;">
+										<div id="status_cl" class="bar-item tooltip" data-tooltip="0%" style="width:0%;"></div>
+									</div>
+									
+									<button class="btn float-right" id="import_json_cl" style="display:none;">JSON klassifizieren</button>
+									<button class="btn float-right" id="import_xml_cl" style="display:none;">XML klassifizieren</button>
+									<button class="btn float-right" id="import_pdf_cl" style="display:none;">PDF klassifizieren</button>
+									<button class="btn float-right" id="import_demo" style="display:none;">PDF-Analyse laden</button>
+									
+									<small style="clear:both" id="disclaimer_cl"><br>Es werden keine Daten versendet oder gespeichert. Alle Berechnungen erfolgen lokal in Ihrem Browser.</small>
+									<small style="display:none;" id="disclaimer_demo"><br>Durch Klick auf den Button wird die Analyse eines PDF-Dokuments (234 Seiten) geladen.</small>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="columns" id="xmlAnalysis_cl" style="display:none;">
+						<div class="column col-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">XML-Optionen</h4>
+									<h6 class="card-meta">Bitte geben Sie an, welche XML-Elemente als Module verwendet werden sollen und in welchem Attribut die ID des Moduls steht.</h6>
+								</div>
+								<div class="card-body">             
+									<div class="form-group">
+										<select style="display:none;" placeholder="Modul-Element(e)" id="xmlElem_cl" multiple></select>
+										<select style="display:none;" placeholder="ID-Attribut" id="xmlAttr_cl"></select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="classificationAnalysis" style="display:none;">
+						<div class="columns">
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Klassen</h4>
+										<h6 class="card-meta">Anzahl gefundener Klassen</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="cA_cls">?</h2>
+										<p>von <span id="cAM_cls"></span> Klassen im Modell</p>
+									</div>
+								</div>
+							</div>
+							<div class="column col-6">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Konfidenzverteilung</h4>
+									</div>
+									<div class="card-body" style="padding: 0 27px;" id="cA_histogramChart"></div>
+								</div>
+							</div>
+							<div class="column col-3">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Zeit</h4>
+										<h6 class="card-meta">Benötigte Zeit</h6>
+									</div>
+									<div class="card-body">
+										<h2 id="cA_tme">?</h2>
+										<p>für <span id="cA_cnt"></span> klassifizierte Objekte</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="classDistributionAnalysis" style="display: none;">
+							<div class="columns">
+								<div class="column col-12">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">Klassenverlauf</h4>
+											<h6 class="card-meta">Zeigt den Verlauf der erkannten Klassen über das komplette Dokument</h6>
+										</div>
+										<div class="card-body">
+											<div id="cA_scatterPlot" style="height:500px;width:900;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="confidenceAnalysis" style="display: none;">
+							<div class="columns">
+								<div class="column col-12">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">Konfidenzverlauf</h4>
+											<h6 class="card-meta">Verlauf der Konfidenzwerte über das komplette Dokument im Vergleich zum Grenzwert.</h6>
+										</div>
+										<div class="card-body">
+											<div id="cA_lineChart" style="height:500px;width:900px;"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Klassenverteilung</h4>
+										<h6 class="card-meta">Anzahl analysierter Module pro Klasse (Mouseover für mehr Informationen zu einer Klasse).</h6>
+									</div>
+									<div class="card-body">
+										<div id="cA_plot" style="height:800px;width:900px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</section>
+
+				<section id="panel_authoring" style="display:none;">
+					
+					<h3 class="panelTitle" id="panelTitle_at">Text-Klassifikation</h3>
+
+					<div id="panel_authoring_warning" class="toast toast-primary" style="margin-top:20px;">
+						<span style="font-size:20px;display:inline-block;margin-right:10px;">&#9888;</span>
+						Um diese Funktion nutzen zu können, muss zuerst ein Modell trainiert werden. Starten Sie <a href="#training">hier</a>.
+					</div>
+
+					<div class="columns" id="classificationTextInput" style="display:none;">
+						<div class="column col-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="columns">
+										<div class="column col-9">
+											<div class="form-group">
+												<textarea id="textinput" class="form-input" id="input-example-3" placeholder="Text hier eingeben oder reinkopieren" rows="10"></textarea>
+											</div>
+										</div>
+										<div class="column col-3">
+											<div class="form-group">
+												<button class="btn" id="classify_textinput">Klassifizieren</button>
+											</div>
+											<small style="clear:both">
+												<br><br><br><br><br><br> <!-- forgive me css gods -->
+												Verwenden Sie reinen Text (ohne XML-Elemente).
+											</small>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="classificationAnalysisText" style="display:none;">
+						<div class="columns">
+							<div class="column col-4">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Klasse</h4>
+										<h6 class="card-meta">Die wahrscheinlichste Klassifikation ihrer Eingabe</h6>
+									</div>
+									<div class="card-body">
+										<h4 id="cAT_clf">?</h4>
+									</div>
+								</div>
+							</div>
+							<div class="column col-4">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Konfidenz</h4>
+										<h6 class="card-meta">Die Sicherheit, mit derer die Klassifikation richtig ist</h6>
+									</div>
+									<div class="card-body">
+										<h4 id="cAT_cfd">?</h4>
+									</div>
+								</div>
+							</div>
+							<div class="column col-4">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Zeit</h4>
+										<h6 class="card-meta">Benötigte Zeit, für die Klassifizierung</h6>
+									</div>
+									<div class="card-body">
+										<h4 id="cAT_tme">?</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="columns">
+							<div class="column col-12">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Klassennähe</h4>
+										<h6 class="card-meta">Ergebnisse der Klassifizierung pro Klasse (Kosinusähnlichkeit)</h6>
+									</div>
+									<div class="card-body">
+										<div id="cAT_plot" style="height:350px;width:650px;"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+		<script data-main="scripts/main.js" src="vendor/require.js"></script>
+	</body>
+</html>

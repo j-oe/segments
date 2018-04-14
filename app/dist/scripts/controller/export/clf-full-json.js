@@ -1,0 +1,1 @@
+define(["controller/store","helper/l10n"],function(n,e){var i={label:e({en:"Classifications (JSON)",de:"Klassifikationen (JSON)"}),extension:"json",filename:"fastclass_classification"};return{register:function(){return i},condition:function(){return n.classifiedData&&0!==n.classifiedData.length},execute:function(){return new Promise(function(e,i){e(n.classifiedData)})}}});

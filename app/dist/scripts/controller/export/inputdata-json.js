@@ -1,0 +1,1 @@
+define(["controller/store","helper/l10n"],function(e,n){var t={label:n({en:"Save source data",de:"Quelldaten sichern"}),extension:"json",filename:"fastclass_source"};return{register:function(){return t},condition:function(){return e.inputData&&0!==e.inputData.length},execute:function(){return new Promise(function(n,t){n(e.inputData)})}}});

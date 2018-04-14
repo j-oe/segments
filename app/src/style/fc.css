@@ -1,0 +1,269 @@
+/** fastclass - Custom Style
+	(c) Jan Oevermann, 2017 
+	License: MIT
+*/
+
+
+/* Import CSS Framework spectre.css - https://picturepan2.github.io/spectre/ */
+@import "../vendor/spectre.css";
+@import "../vendor/spectre-exp.css";
+@import "../vendor/spectre-icons.css";
+
+
+/* Define styles */
+body {
+	font-family: "Segoe UI", "Open Sans", ".SFNSText-Regular", "San Francisco",  "Roboto", "Helvetica Neue", "Lucida Grande", sans-serif;
+}
+
+header {
+	border-bottom: 1px solid #666;
+}
+
+.fade-enter-active, .fade-leave-active {
+ 	 transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+	opacity: 0;
+}
+
+#studio h1, #studio h2, #studio h3, #studio h4, #studio h5, #studio h6 {
+	font-weight: 300;
+}
+
+#studio .mg-x-axis text, #studio .mg-y-axis text, #studio .mg-histogram .axis text, #studio .mg-histogram text {
+	fill: #454d5d;
+	font-size: 0.5rem;
+    opacity: 1;
+}
+
+#diff-body span {
+	margin: 2px 0;
+}
+
+#diff-body span.mod {
+	/*font-weight: bold;*/
+}
+
+span.mod + span.mod::before {
+    content: ' | ';
+    color: black;
+}
+
+#diff-details {
+	margin-top: 10px;
+}
+
+#diff-details > p:first-child {
+	margin-bottom: 0px;
+}
+
+.diff-details-right {
+	display: inline-block;
+	float: right;
+}
+
+#diff-details-weighted-content small {
+    margin-left: 3px;
+}
+
+/*#diff-details-v {
+	font-size: 1em;
+}*/
+
+#set-modal table {
+	width: 600px;
+	margin-bottom: 100px;
+}
+
+#set-modal table input[type=range] {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#set-modal table .form-switch {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+section {
+	padding-top: 0.5rem;
+}
+
+.card {
+	border-color: #bbb;
+	margin: 0.5rem 0;
+
+}
+
+.card-body h2 {
+	text-align: center;
+}
+
+svg {
+	width: 100%; 
+	height: 100%;
+}
+
+code {
+	font-size: 0.8em;
+}
+
+pre code {
+	line-height: 1.2rem;
+}
+
+h6.lang {
+	font-size: 10pt;
+}
+
+#logo {
+	float: left;
+	font-weight: 300;
+	font-size: 20pt; 
+	cursor:pointer; 
+	display:inline-block;
+	margin-right: 20px;
+}
+
+.panelTitle {
+	margin-top: 25px;
+}
+
+#manageModel, #manageReport, #manageClassification {
+	margin-top: 25px;
+}
+
+#model-name, #report-name, #classifiedFile {
+	font-weight: 300;
+	padding-top: 2px;
+}
+
+#model-name, #report-name {
+	font-size: 20pt;	
+}
+
+#classifiedFile {
+	font-size: 16pt;
+}
+
+#model-name:hover, #report-name:hover {
+	outline: 1px dashed #666;
+}
+
+#load-modal .modal-container {
+	height: 50%;
+	width: 50%;
+}
+
+#load-modal .modal-body {
+	height: 80%;
+}
+
+.bar, progress {
+    display: inline-block;
+    width: 30% !important;
+    margin-left: 50px !important;
+}
+
+.dropdown {
+	display: inline-block;
+}
+
+.dropdown small {
+	font-weight: 700;
+	color: #666;
+	display: inline-block;
+	width: 100%;
+	margin-top: 10px;
+	border-bottom: 1px solid #666;
+}
+
+.navbar-entries {
+	width: 100%;
+	display: inline-block;
+}
+
+.navbar-section {
+	width: 100%;
+}
+
+.navbar .dropdown-toggle {
+	margin-top: 7px;
+}
+
+.navbar {
+	font-weight: 500;
+}
+
+.inactive {
+	cursor: default;
+	color: #666;
+}
+
+.avatar {
+	cursor:pointer; 
+}
+
+.indicator {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 7.5px;
+    margin-bottom: 5px;
+    margin-left: 15px;
+    opacity: 0.6;
+}
+
+.indicator-bad {
+	background-color: #961a1a;
+}
+.indicator-medium {
+	background-color: #d8d23a;
+}
+.indicator-good {
+	background-color: #6ada6a;
+}
+.indicator-neutrla {
+	background-color: #a9c2bc;
+}
+
+.example-tile-icon {
+    -webkit-align-content: space-around;
+    align-content: space-around;
+    -webkit-align-items: center;
+    align-items: center;
+    background: #5764c6;
+    border-radius: .2rem;
+    color: #fff;
+    display: flex;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    -ms-flex-align: center;
+    -ms-flex-line-pack: distribute;
+    font-size: 2.4rem;
+    height: 4rem;
+    width: 4rem;
+}
+
+
+/* similarity analysis */
+.graph-links line {
+	stroke: #999;
+	stroke-opacity: 0.6;
+}
+
+.graph-nodes circle {
+	cursor: pointer;
+	stroke: #fff;
+	stroke-width: 1.5px;
+}
+
+/*MG Customization*/
+
+.mg-active-datapoint {
+    font-size: 0.5rem !important;
+}
+
+.mg-histogram .axis text {
+    font-size: 0.7rem !important;
+}

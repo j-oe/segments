@@ -1,0 +1,1 @@
+define(["controller/store","controller/local","helper/l10n"],function(e,n,r){var o={label:r({en:"Save in Browser",de:"In Browser speichern"})};return{register:function(){return o},condition:function(){return e.model&&0!==Object.keys(e.model).length},execute:function(){return n.storeModel(e.model)}}});

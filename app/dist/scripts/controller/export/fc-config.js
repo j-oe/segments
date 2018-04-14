@@ -1,0 +1,1 @@
+define(["config/params","helper/l10n"],function(n,e){var o={label:e({en:"Export configuration",de:"Konfiguration herunterladen"}),extension:"json",filename:"fastclass_config"};return{register:function(){return o},condition:function(){return n.getParam("configurationDownloadable")},execute:function(){return new Promise(function(e,o){e(n.getConfig())})}}});
